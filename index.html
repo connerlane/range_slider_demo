@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>range demo</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <h4 class="header center light">HTML5 range demo for Sam</h4>
+      <div class="row center">
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="section">
+
+      <div class="row">
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center light-blue-text"><i class="material-icons">videocam</i></h2>
+            <h5 class="center">Number of videos</h5>
+            <br>
+            <form action="#">
+              <p class="range-field">
+                <input type="range" id="numVidsSlider" min="1" max="10" value="1" onchange="updateCostValue();"/>
+              </p>
+            </form>
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center light-blue-text"><i class="material-icons">timer</i></h2>
+            <h5 class="center">Length per video</h5>
+
+            <br>
+            <form action="#">
+              <p class="range-field">
+                <input type="range" id="lengthSlider" min="1" max="5" value="1" onchange="updateCostValue();"/>
+              </p>
+            </form>
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center light-blue-text"><i class="material-icons">settings</i></h2>
+            <h5 class="center">Complexity</h5>
+
+            <br>
+            <form action="#">
+              <p class="range-field">
+                <input type="range" id="complexitySlider" min="1" max="3" value="1" onchange="updateCostValue();"/>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12 m12 ">
+          <h4 class="header center light" id="first_name"></h4>
+        </div>
+      </div>
+    </div>
+    <br><br>
+  </div>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+  <script type="text/javascript">
+    function updateCostValue() {
+      document.getElementById('first_name').innerText="Estimate: $" + getTotal(); 
+    }
+    function getTotal() {
+      // This doesn't quite scale linearly. You get some discounts for more videos
+      NUM_VIDEO_SCALING = [5000, 6000, 6700, 7400, 8000, 8600, 9100, 9600, 10000, 10300];
+
+      // We'll make length of video scale linearly, so we dont need a scaling table for that one.
+      LENGTH_SCALE_FACTOR = 1000; // + $1000 for each level of length
+
+      // And here's the Complexity scale (basically arbitrary)
+      COMPLEXITY_SCALING = [2000, 4200, 7000];
+
+      numVids = document.getElementById('numVidsSlider').value;
+      numVidsCost = NUM_VIDEO_SCALING[numVids - 1] // have to subtract 1 because JS arrays are zero-indexed 
+
+      length = document.getElementById('lengthSlider').value;
+      lengthCost = LENGTH_SCALE_FACTOR * length
+
+      complexity = document.getElementById('complexitySlider').value;
+      complexityCost = COMPLEXITY_SCALING[complexity - 1] // have to subtract 1 because JS arrays are zero-indexed 
+
+      return formatMoney(complexityCost + lengthCost + numVidsCost);
+
+    }
+    function formatMoney(number) {
+      return number.toFixed().replace(/(\d)(?=(\d{3})+(,|$))/g, '$1,') // just adds commas where necessary
+    }
+    $( document ).ready(function() {
+      updateCostValue(); // load initial cost when the page first opens
+    });
+  </script>
+
+</body>
+</html>
